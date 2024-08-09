@@ -122,7 +122,7 @@ async def on_message(message):
         await message.author.send("あなたはスパムによってタイムアウトされました。")
         sent.append(message.author.name)
         message_count[message.author.name] = 0
-        await asyncio.sleep(114514)
+        await asyncio.sleep(5)
         return
 
     if ai == "y":
