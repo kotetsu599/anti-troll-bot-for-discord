@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reCAPTCHA Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+        }
+        #recaptcha-container {
+            margin-top: 20px;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>reCAPTCHA Verification</h1>
+        <div id="recaptcha-container">
+            <div class="g-recaptcha" data-sitekey=サイトキーをここに></div>
+        </div>
+        <button onclick="verifyCaptcha()">Verify</button>
+        <div id="status"></div>
+    </div>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function verifyCaptcha() {
+            var recaptchaResponse = grecaptcha.getResponse();
+            if (recaptchaResponse.length === 0) {
+                document.getElementById('status').innerText = 'Please complete the reCAPTCHA.';
+                return;
+            }
+
+            fetch('http://あなたのサイトのドメイン/recaptcha-complete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify({
+                    recaptcha_token: recaptchaResponse
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('status').innerText = 'reCAPTCHA verification successful!';
+            })
+            .catch(error => {
+                document.getElementById('status').innerText = 'An error occurred: ' + error.message;
+            });
+        }
+    </script>
+</body>
+</html>
